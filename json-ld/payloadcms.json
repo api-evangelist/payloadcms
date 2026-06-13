@@ -1,0 +1,209 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": "https://payloadcms.com",
+  "name": "Payload CMS",
+  "description": "Open-source headless CMS and fullstack Next.js framework providing automatic REST and GraphQL APIs for managing collections, globals, media, users, and custom fields in self-hosted or cloud deployments.",
+  "url": "https://payloadcms.com",
+  "applicationCategory": "Content Management System",
+  "applicationSubCategory": "Headless CMS",
+  "operatingSystem": "Linux, macOS, Windows",
+  "programmingLanguage": [
+    "TypeScript",
+    "JavaScript"
+  ],
+  "runtimePlatform": "Node.js",
+  "softwareVersion": "3.x",
+  "license": "https://github.com/payloadcms/payload/blob/main/LICENSE.md",
+  "isAccessibleForFree": true,
+  "codeRepository": "https://github.com/payloadcms/payload",
+  "downloadUrl": "https://www.npmjs.com/package/payload",
+  "sameAs": [
+    "https://github.com/payloadcms",
+    "https://x.com/payloadcms",
+    "https://www.linkedin.com/company/payload-cms"
+  ],
+  "offers": {
+    "@type": "Offer",
+    "url": "https://payloadcms.com/cloud",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock"
+  },
+  "featureList": [
+    "Auto-generated REST API",
+    "Auto-generated GraphQL API",
+    "Local Node.js API",
+    "TypeScript-first configuration",
+    "Next.js native integration",
+    "Self-hosted or cloud deployment",
+    "Role-based access control",
+    "Multi-tenant support",
+    "Media management with image cropping and focal point selection",
+    "Rich text editor (Lexical)",
+    "Customizable admin UI",
+    "Plugin ecosystem",
+    "PostgreSQL and MongoDB support",
+    "Live preview",
+    "Internationalization (i18n)",
+    "Bulk operations",
+    "Webhooks",
+    "Email integration",
+    "Cloud storage integration",
+    "White-label admin UI"
+  ],
+  "provider": {
+    "@type": "Organization",
+    "name": "Payload CMS",
+    "url": "https://payloadcms.com",
+    "sameAs": [
+      "https://github.com/payloadcms",
+      "https://x.com/payloadcms",
+      "https://www.linkedin.com/company/payload-cms"
+    ]
+  },
+  "hasPart": [
+    {
+      "@type": "WebAPI",
+      "@id": "https://payloadcms.com/docs/rest-api/overview",
+      "name": "Payload CMS REST API",
+      "description": "Auto-generated RESTful API for managing collections, globals, media uploads, users, and preferences. Mounted at /api/{collection-slug} with full CRUD operations plus authentication endpoints.",
+      "documentation": "https://payloadcms.com/docs/rest-api/overview",
+      "endpointUrl": "https://{your-domain}/api",
+      "potentialAction": [
+        {
+          "@type": "SearchAction",
+          "name": "Find Documents",
+          "httpMethod": "GET",
+          "urlTemplate": "https://{your-domain}/api/{collection-slug}"
+        },
+        {
+          "@type": "FindAction",
+          "name": "Find Document By ID",
+          "httpMethod": "GET",
+          "urlTemplate": "https://{your-domain}/api/{collection-slug}/{id}"
+        },
+        {
+          "@type": "CreateAction",
+          "name": "Create Document",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{collection-slug}"
+        },
+        {
+          "@type": "UpdateAction",
+          "name": "Update Document By ID",
+          "httpMethod": "PATCH",
+          "urlTemplate": "https://{your-domain}/api/{collection-slug}/{id}"
+        },
+        {
+          "@type": "DeleteAction",
+          "name": "Delete Document By ID",
+          "httpMethod": "DELETE",
+          "urlTemplate": "https://{your-domain}/api/{collection-slug}/{id}"
+        },
+        {
+          "@type": "SearchAction",
+          "name": "Count Documents",
+          "httpMethod": "GET",
+          "urlTemplate": "https://{your-domain}/api/{collection-slug}/count"
+        },
+        {
+          "@type": "Action",
+          "name": "Login",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/login"
+        },
+        {
+          "@type": "Action",
+          "name": "Logout",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/logout"
+        },
+        {
+          "@type": "Action",
+          "name": "Refresh Token",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/refresh-token"
+        },
+        {
+          "@type": "Action",
+          "name": "Get Current User",
+          "httpMethod": "GET",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/me"
+        },
+        {
+          "@type": "Action",
+          "name": "Forgot Password",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/forgot-password"
+        },
+        {
+          "@type": "Action",
+          "name": "Reset Password",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/reset-password"
+        },
+        {
+          "@type": "Action",
+          "name": "Verify User",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/verify/{token}"
+        },
+        {
+          "@type": "Action",
+          "name": "Unlock User",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/{user-collection}/unlock"
+        },
+        {
+          "@type": "FindAction",
+          "name": "Get Global",
+          "httpMethod": "GET",
+          "urlTemplate": "https://{your-domain}/api/globals/{global-slug}"
+        },
+        {
+          "@type": "UpdateAction",
+          "name": "Update Global",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/globals/{global-slug}"
+        },
+        {
+          "@type": "FindAction",
+          "name": "Get Preference",
+          "httpMethod": "GET",
+          "urlTemplate": "https://{your-domain}/api/payload-preferences/{key}"
+        },
+        {
+          "@type": "CreateAction",
+          "name": "Create Preference",
+          "httpMethod": "POST",
+          "urlTemplate": "https://{your-domain}/api/payload-preferences/{key}"
+        },
+        {
+          "@type": "DeleteAction",
+          "name": "Delete Preference",
+          "httpMethod": "DELETE",
+          "urlTemplate": "https://{your-domain}/api/payload-preferences/{key}"
+        }
+      ]
+    },
+    {
+      "@type": "WebAPI",
+      "@id": "https://payloadcms.com/docs/graphql/overview",
+      "name": "Payload CMS GraphQL API",
+      "description": "Fully featured GraphQL API exposed at /api/graphql with auto-generated types for all collections and globals. Includes a GraphQL Playground at /api/graphql-playground and supports complexity limiting.",
+      "documentation": "https://payloadcms.com/docs/graphql/overview",
+      "endpointUrl": "https://{your-domain}/api/graphql"
+    },
+    {
+      "@type": "SoftwareLibrary",
+      "@id": "https://payloadcms.com/docs/local-api/overview",
+      "name": "Payload CMS Local API",
+      "description": "Server-side Node.js API for direct database interaction without HTTP overhead. Supports all collection and global operations including authentication, ideal for React Server Components.",
+      "documentation": "https://payloadcms.com/docs/local-api/overview"
+    }
+  ],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "url": "https://payloadcms.com/docs/getting-started/what-is-payload"
+  }
+}
