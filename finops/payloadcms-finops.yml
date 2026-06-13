@@ -1,0 +1,52 @@
+name: Payload CMS FinOps
+description: Financial operations guidance for managing and optimizing costs when using Payload CMS cloud or self-hosted deployments.
+url: https://payloadcms.com/cloud
+cost_drivers:
+  - name: Cloud Hosting Tier
+    description: The primary cost driver for Payload Cloud users is the selected hosting plan. Self-hosted deployments avoid cloud subscription fees but incur infrastructure costs with the chosen provider (Vercel, Cloudflare, AWS, etc.).
+    tiers:
+      - name: Free Self-Hosted
+        monthly_cost: 0
+        notes: Pay only for underlying infrastructure (hosting, database, storage)
+      - name: Standard Cloud
+        monthly_cost: 35
+      - name: Pro Cloud
+        monthly_cost: 199
+      - name: Enterprise Cloud
+        monthly_cost: 833
+        notes: Annual commitment; custom pricing available
+  - name: Database Storage Overages
+    description: Additional database storage beyond plan limits is charged per GB.
+    rate: 0.50
+    unit: per GB
+  - name: Bandwidth Overages
+    description: Data transfer beyond included plan bandwidth is charged per GB per month.
+    rate: 0.20
+    unit: per GB per month
+  - name: File Storage Overages
+    description: File storage beyond plan-included limits is charged per GB.
+    rate: 0.02
+    unit: per GB
+optimization_strategies:
+  - name: Self-Hosting on Serverless Platforms
+    description: Deploy Payload on Vercel (with Neon database and Vercel Blob storage) or Cloudflare (Workers, R2, D1) to leverage free tiers and pay-per-use pricing, minimizing base costs for low-traffic projects.
+  - name: GraphQL Complexity Limits
+    description: Set appropriate maxComplexity values to prevent runaway queries that consume excessive compute resources and could increase infrastructure costs.
+  - name: Query Depth Control
+    description: Configure maxDepth as low as practical to reduce database query complexity and associated compute costs.
+  - name: File Upload Access Control
+    description: Restrict upload collection access to prevent storage cost overruns from unauthorized file uploads.
+  - name: Plan Right-Sizing
+    description: Start on the Standard Cloud plan ($35/month) and upgrade to Pro only when traffic, storage, or compute requirements justify the cost increase.
+  - name: Bandwidth Optimization
+    description: Use a CDN in front of Payload for media delivery to reduce per-request bandwidth costs and improve performance.
+benchmarks:
+  - metric: Median verified customer spend
+    value: 264
+    unit: USD per year
+    source: costbench.com
+cost_visibility:
+  - Monitor database storage usage to avoid $0.50/GB overage charges
+  - Track file storage growth relative to plan limits
+  - Monitor bandwidth consumption especially for media-heavy deployments
+  - Use Payload Cloud dashboard metrics to forecast overage costs before billing cycles

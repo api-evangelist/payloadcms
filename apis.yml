@@ -1,0 +1,82 @@
+aid: payloadcms
+name: Payload CMS
+description: Open-source headless CMS and fullstack Next.js framework providing automatic REST and GraphQL APIs for managing collections, globals, media, users, and custom fields in self-hosted or cloud deployments.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/payloadcms/refs/heads/main/apis.yml
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.19'
+tags:
+  - Headless CMS
+  - Content Management
+  - REST API
+  - GraphQL
+  - Next.js
+  - Open Source
+  - Self-Hosted
+  - TypeScript
+apis:
+  - aid: payloadcms:rest-api
+    name: Payload CMS REST API
+    description: Auto-generated RESTful API for managing collections, globals, media uploads, users, and preferences. Mounted at /api/{collection-slug} with full CRUD operations plus authentication endpoints.
+    humanURL: https://payloadcms.com/docs/rest-api/overview
+    baseURL: https://{your-domain}/api
+    tags:
+      - REST
+      - Collections
+      - Globals
+      - Authentication
+      - Media
+    properties:
+      - type: Documentation
+        url: https://payloadcms.com/docs/rest-api/overview
+  - aid: payloadcms:graphql-api
+    name: Payload CMS GraphQL API
+    description: Fully featured GraphQL API exposed at /api/graphql with auto-generated types for all collections and globals. Includes a GraphQL Playground at /api/graphql-playground and supports complexity limiting to prevent abuse.
+    humanURL: https://payloadcms.com/docs/graphql/overview
+    baseURL: https://{your-domain}/api/graphql
+    tags:
+      - GraphQL
+      - Collections
+      - Globals
+      - Authentication
+    properties:
+      - type: Documentation
+        url: https://payloadcms.com/docs/graphql/overview
+  - aid: payloadcms:local-api
+    name: Payload CMS Local API
+    description: Server-side Node.js API for direct database interaction without HTTP overhead. Supports all collection and global operations including authentication, ideal for React Server Components and server-side rendering.
+    humanURL: https://payloadcms.com/docs/local-api/overview
+    baseURL: https://{your-domain}
+    tags:
+      - Node.js
+      - Server-Side
+      - Collections
+      - Globals
+    properties:
+      - type: Documentation
+        url: https://payloadcms.com/docs/local-api/overview
+common:
+  - type: Website
+    url: https://payloadcms.com
+  - type: Documentation
+    url: https://payloadcms.com/docs/getting-started/what-is-payload
+  - type: GitHubOrg
+    url: https://github.com/payloadcms
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/payload-cms
+  - type: Blog
+    url: https://payloadcms.com/posts/blog
+  - type: Pricing
+    url: https://payloadcms.com/cloud
+  - type: X
+    url: https://x.com/payloadcms
+  - type: Plans
+    url: plans/payloadcms-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/payloadcms-rate-limits.yml
+  - type: FinOps
+    url: finops/payloadcms-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

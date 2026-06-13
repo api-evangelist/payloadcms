@@ -1,0 +1,66 @@
+name: Payload CMS Plans and Pricing
+description: Pricing plans for Payload CMS cloud hosting and self-hosted deployment options.
+url: https://payloadcms.com/cloud
+plans:
+  - name: Free (Self-Hosted)
+    description: Fully open-source self-hosted deployment with no cloud costs. Ideal for developers managing their own infrastructure.
+    price: 0
+    unit: month
+    features:
+      - Full open-source headless CMS
+      - TypeScript-first code-based configuration
+      - Automatic REST and GraphQL API generation
+      - React-based admin panel
+      - Built-in authentication and access control
+      - MongoDB and PostgreSQL support
+      - Unlimited collections and globals
+      - File upload management
+      - Localization support
+      - Versioning and drafts
+  - name: Standard Cloud
+    description: Managed cloud hosting for small projects and teams, with automatic updates and basic support.
+    price: 35
+    unit: month
+    features:
+      - All self-hosted features
+      - Managed cloud infrastructure
+      - 512MB RAM
+      - 3GB database storage
+      - 30GB file storage
+      - 50M serverless RPUs
+      - Automatic updates and maintenance
+      - Basic support tier
+  - name: Pro Cloud
+    description: Production-grade cloud deployment with dedicated cluster and higher resource limits for high-traffic applications.
+    price: 199
+    unit: month
+    features:
+      - All Standard features
+      - Dedicated cluster
+      - 30GB database storage
+      - 150GB file storage
+      - High-availability compute
+      - Priority support access
+      - Higher bandwidth limits
+  - name: Enterprise Cloud
+    description: Enterprise-grade deployment with custom SLAs, dedicated support, and custom integrations for large organizations.
+    price: 833
+    unit: month
+    notes: Annual commitment; custom pricing available
+    features:
+      - All Pro features
+      - Custom SLAs
+      - Dedicated enterprise support
+      - Enterprise SSO (Single Sign-On)
+      - Custom integrations
+      - Compliance and security reviews
+overage_pricing:
+  - item: Database storage
+    price: 0.50
+    unit: per GB
+  - item: Bandwidth
+    price: 0.20
+    unit: per GB per month
+  - item: File storage
+    price: 0.02
+    unit: per GB

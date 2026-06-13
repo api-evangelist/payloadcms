@@ -1,0 +1,43 @@
+name: Payload CMS Rate Limits
+description: Rate limiting and abuse prevention mechanisms built into Payload CMS for REST, GraphQL, and authentication endpoints.
+url: https://payloadcms.com/docs/production/preventing-abuse
+limits:
+  - name: GraphQL Query Complexity
+    description: GraphQL requests are evaluated with a complexity scoring system to prevent resource-intensive queries from overloading the server. Standard fields cost 1 complexity point; relationship and upload fields cost 10 complexity points each. Requests exceeding the maxComplexity threshold are rejected.
+    type: complexity
+    default_field_cost: 1
+    relationship_field_cost: 10
+    upload_field_cost: 10
+    configurable: true
+    config_key: graphQL.maxComplexity
+  - name: Maximum Query Depth
+    description: Prevents infinite relationship traversal that could cause server timeouts. The maxDepth property on the Payload Config limits how deeply nested relationships can be queried.
+    type: depth
+    default: 10
+    configurable: true
+    config_key: maxDepth
+    recommendation: Set as small as possible without interrupting developer experience
+  - name: Login Attempt Limits
+    description: Failed login attempt limits protect authenticated collections from brute-force attacks. Accounts are locked for a configurable period after exceeding the maximum number of failed attempts.
+    type: authentication
+    configurable: true
+    config_keys:
+      - maxLoginAttempts
+      - lockTime
+    lockTime_unit: milliseconds
+  - name: HTTP 429 Status
+    description: Payload may return a 429 Too Many Requests status code when rate limits are exceeded at the application or infrastructure layer.
+    type: http
+    status_code: 429
+security_features:
+  - name: CSRF Prevention
+    description: Verifies the authenticity of each request to the API to block unauthorized cross-site actions.
+  - name: CORS Configuration
+    description: Controls which origins can access the Payload API, restricting cross-origin requests to trusted domains.
+  - name: GraphQL Disable Option
+    description: GraphQL can be disabled entirely by setting graphQL.disable to true in the Payload config.
+  - name: File Upload Safety
+    description: Recommendations include email verification for user registration, restricting access on upload collections, and integrating third-party antivirus scanning through hooks.
+notes:
+  - Payload CMS is self-hosted, so rate limiting at the infrastructure level (CDN, reverse proxy, WAF) is the responsibility of the deploying organization.
+  - Payload Cloud managed deployments may apply additional infrastructure-level rate limits not documented in the public API docs.
