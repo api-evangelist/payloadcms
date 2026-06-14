@@ -1,0 +1,765 @@
+# Payload CMS GraphQL Schema
+#
+# IMPORTANT: Payload CMS generates its GraphQL schema dynamically at startup from
+# the user-defined collection and global configurations. There is no single static
+# schema file — the actual schema varies per deployment based on which collections
+# and globals are configured.
+#
+# This document captures:
+#   1. The framework-level generation patterns (confirmed from source code in
+#      packages/graphql/src/schema/ and packages/graphql/src/resolvers/)
+#   2. The built-in collections that every Payload app includes (users, payload-preferences)
+#   3. Concrete example types for a typical app with a "Post" collection and "Header" global
+#   4. All shared infrastructure types (pagination, policy/access, locale, where-input operators)
+#
+# Source references:
+#   packages/graphql/src/index.ts                    — configToSchema() entry point
+#   packages/graphql/src/schema/initCollections.ts   — per-collection query/mutation wiring
+#   packages/graphql/src/schema/initGlobals.ts       — per-global query/mutation wiring
+#   packages/graphql/src/schema/buildPaginatedListType.ts
+#   packages/graphql/src/schema/buildPoliciesType.ts
+#   packages/graphql/src/schema/buildLocaleInputType.ts
+#   packages/graphql/src/schema/buildFallbackLocaleInputType.ts
+#   packages/graphql/src/schema/operators.ts
+#   packages/payload/src/preferences/config.ts
+#   packages/payload/src/database/migrations/migrationsCollection.ts (graphQL: false — not exposed)
+
+# ---------------------------------------------------------------------------
+# Scalars
+# ---------------------------------------------------------------------------
+
+"""
+JSON scalar — stores arbitrary JSON data (used for preference values,
+richtext, and json field types). Provided by graphql-type-json.
+"""
+scalar JSON
+
+# ---------------------------------------------------------------------------
+# Enums
+# ---------------------------------------------------------------------------
+
+"""
+Locale codes available for localized content queries.
+Values are determined by the localization.locales config array.
+This enum only exists when localization is enabled in the Payload config.
+Example values shown; actual values depend on the deployment configuration.
+"""
+enum LocaleInputType {
+  en
+  es
+  fr
+  de
+}
+
+"""
+Fallback locale for localized content queries when the requested locale
+has no content. Includes all locale codes plus the special value 'none'.
+Only exists when localization is enabled.
+"""
+enum FallbackLocaleInputType {
+  en
+  es
+  fr
+  de
+  none
+}
+
+# ---------------------------------------------------------------------------
+# Pagination (built from buildPaginatedListType.ts)
+# ---------------------------------------------------------------------------
+
+"""
+Paginated list wrapper generated for every collection's find operation.
+Named after the collection's plural label (e.g. Posts, Users, MediaItems).
+"""
+type Posts {
+  docs: [Post!]!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+  limit: Int!
+  nextPage: Int
+  offset: Int
+  page: Int!
+  pagingCounter: Int!
+  prevPage: Int
+  totalDocs: Int!
+  totalPages: Int!
+}
+
+"""
+Count result type generated for every collection's count operation.
+Named count{PluralName}.
+"""
+type countPosts {
+  totalDocs: Int
+}
+
+# ---------------------------------------------------------------------------
+# Built-in: Users collection (slug: "users", auth: true)
+# Generated names: User / Users based on default slug "users"
+# ---------------------------------------------------------------------------
+
+"""
+Default auth-enabled Users collection. Every Payload app includes this
+unless overridden. Fields beyond id/email/updatedAt/createdAt depend on
+the project's user collection field configuration.
+"""
+type User {
+  id: String
+  email: String
+  updatedAt: String
+  createdAt: String
+}
+
+type Users {
+  docs: [User!]!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+  limit: Int!
+  nextPage: Int
+  offset: Int
+  page: Int!
+  pagingCounter: Int!
+  prevPage: Int
+  totalDocs: Int!
+  totalPages: Int!
+}
+
+countUsers {
+  totalDocs: Int
+}
+
+"""
+JWT payload type for the Users collection.
+Contains fields marked saveToJWT plus email and collection name.
+"""
+type usersJWT {
+  email: String!
+  collection: String!
+}
+
+"""
+Me query result for the Users collection.
+"""
+type usersMe {
+  collection: String
+  exp: Int
+  strategy: String
+  token: String
+  user: User
+}
+
+"""
+Login result for the Users collection.
+"""
+type usersLoginResult {
+  exp: Int
+  token: String
+  user: User
+}
+
+"""
+Token refresh result for the Users collection.
+"""
+type usersRefreshedUser {
+  exp: Int
+  refreshedToken: String
+  strategy: String
+  user: usersJWT
+}
+
+"""
+Password reset result for the Users collection.
+"""
+type usersResetPassword {
+  token: String
+  user: User
+}
+
+# ---------------------------------------------------------------------------
+# Built-in: PayloadPreferences collection (slug: "payload-preferences")
+# Generated names: PayloadPreference / PayloadPreferences
+# Note: access is restricted to the authenticated user's own preferences.
+# ---------------------------------------------------------------------------
+
+"""
+Payload admin panel preference record.
+Stores per-user UI preferences keyed by an arbitrary string.
+"""
+type PayloadPreference {
+  id: String
+  user: PayloadPreference_User_Relationship
+  key: String
+  value: JSON
+  updatedAt: String
+  createdAt: String
+}
+
+"""
+Polymorphic relationship to whichever auth-enabled collections exist.
+"""
+type PayloadPreference_User_Relationship {
+  relationTo: String
+  value: JSON
+}
+
+type PayloadPreferences {
+  docs: [PayloadPreference!]!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+  limit: Int!
+  nextPage: Int
+  offset: Int
+  page: Int!
+  pagingCounter: Int!
+  prevPage: Int
+  totalDocs: Int!
+  totalPages: Int!
+}
+
+# ---------------------------------------------------------------------------
+# Access / Policy types (built from buildPoliciesType.ts)
+# The root Access query returns the global policy object.
+# Each collection and global gets a <Slug>Access type with per-operation
+# permission booleans and optional where-clause JSON, plus a fields subtree.
+# ---------------------------------------------------------------------------
+
+"""
+Top-level access policy returned by the Access query.
+Contains canAccessAdmin and one entry per collection/global slug.
+"""
+type Access {
+  canAccessAdmin: Boolean!
+  users: UsersAccess
+  payloadPreferences: PayloadPreferencesAccess
+  # ... one field per collection/global defined in the Payload config
+}
+
+"""
+Per-operation permission booleans for the Users collection.
+"""
+type UsersAccess {
+  fields: UsersFields
+  create: UsersCreateAccess
+  read: UsersReadAccess
+  update: UsersUpdateAccess
+  delete: UsersDeleteAccess
+  unlock: UsersUnlockAccess
+}
+
+type UsersFields {
+  email: UsersFields_email
+}
+
+type UsersFields_email {
+  create: UsersFields_email_Create
+  read: UsersFields_email_Read
+  update: UsersFields_email_Update
+  delete: UsersFields_email_Delete
+}
+
+type UsersFields_email_Create { permission: Boolean! }
+type UsersFields_email_Read   { permission: Boolean! }
+type UsersFields_email_Update { permission: Boolean! }
+type UsersFields_email_Delete { permission: Boolean! }
+
+type UsersCreateAccess  { permission: Boolean!, where: JSON }
+type UsersReadAccess    { permission: Boolean!, where: JSON }
+type UsersUpdateAccess  { permission: Boolean!, where: JSON }
+type UsersDeleteAccess  { permission: Boolean!, where: JSON }
+type UsersUnlockAccess  { permission: Boolean!, where: JSON }
+
+type PayloadPreferencesAccess {
+  fields: PayloadPreferencesFields
+  create: PayloadPreferencesCreateAccess
+  read: PayloadPreferencesReadAccess
+  update: PayloadPreferencesUpdateAccess
+  delete: PayloadPreferencesDeleteAccess
+}
+
+type PayloadPreferencesFields {
+  user:  PayloadPreferencesFields_user
+  key:   PayloadPreferencesFields_key
+  value: PayloadPreferencesFields_value
+}
+
+type PayloadPreferencesFields_user  { create: PayloadPreferencesFields_user_Create, read: PayloadPreferencesFields_user_Read, update: PayloadPreferencesFields_user_Update, delete: PayloadPreferencesFields_user_Delete }
+type PayloadPreferencesFields_key   { create: PayloadPreferencesFields_key_Create,  read: PayloadPreferencesFields_key_Read,  update: PayloadPreferencesFields_key_Update,  delete: PayloadPreferencesFields_key_Delete }
+type PayloadPreferencesFields_value { create: PayloadPreferencesFields_value_Create, read: PayloadPreferencesFields_value_Read, update: PayloadPreferencesFields_value_Update, delete: PayloadPreferencesFields_value_Delete }
+
+type PayloadPreferencesFields_user_Create  { permission: Boolean! }
+type PayloadPreferencesFields_user_Read    { permission: Boolean! }
+type PayloadPreferencesFields_user_Update  { permission: Boolean! }
+type PayloadPreferencesFields_user_Delete  { permission: Boolean! }
+type PayloadPreferencesFields_key_Create   { permission: Boolean! }
+type PayloadPreferencesFields_key_Read     { permission: Boolean! }
+type PayloadPreferencesFields_key_Update   { permission: Boolean! }
+type PayloadPreferencesFields_key_Delete   { permission: Boolean! }
+type PayloadPreferencesFields_value_Create { permission: Boolean! }
+type PayloadPreferencesFields_value_Read   { permission: Boolean! }
+type PayloadPreferencesFields_value_Update { permission: Boolean! }
+type PayloadPreferencesFields_value_Delete { permission: Boolean! }
+
+type PayloadPreferencesCreateAccess  { permission: Boolean!, where: JSON }
+type PayloadPreferencesReadAccess    { permission: Boolean!, where: JSON }
+type PayloadPreferencesUpdateAccess  { permission: Boolean!, where: JSON }
+type PayloadPreferencesDeleteAccess  { permission: Boolean!, where: JSON }
+
+# ---------------------------------------------------------------------------
+# Doc-level access types (per-document access checks, scope: "docAccess")
+# Named <SingularName>DocAccess, returned by docAccess{SingularName} queries.
+# ---------------------------------------------------------------------------
+
+type UserDocAccess {
+  fields: UsersDocAccessFields
+  create: UsersDocAccess_Create
+  read: UsersDocAccess_Read
+  update: UsersDocAccess_Update
+  delete: UsersDocAccess_Delete
+  unlock: UsersDocAccess_Unlock
+}
+
+type UsersDocAccessFields        { email: UsersDocAccessFields_email }
+type UsersDocAccessFields_email  { create: UsersDocAccessFields_email_Create, read: UsersDocAccessFields_email_Read, update: UsersDocAccessFields_email_Update, delete: UsersDocAccessFields_email_Delete }
+type UsersDocAccessFields_email_Create { permission: Boolean! }
+type UsersDocAccessFields_email_Read   { permission: Boolean! }
+type UsersDocAccessFields_email_Update { permission: Boolean! }
+type UsersDocAccessFields_email_Delete { permission: Boolean! }
+type UsersDocAccess_Create  { permission: Boolean!, where: JSON }
+type UsersDocAccess_Read    { permission: Boolean!, where: JSON }
+type UsersDocAccess_Update  { permission: Boolean!, where: JSON }
+type UsersDocAccess_Delete  { permission: Boolean!, where: JSON }
+type UsersDocAccess_Unlock  { permission: Boolean!, where: JSON }
+
+# ---------------------------------------------------------------------------
+# Where-input types (generated by buildWhereInputType.ts)
+# Each filterable field gets operator sub-inputs based on its type.
+# The operators available are defined in schema/operators.ts:
+#   equality: equals, not_equals
+#   comparison: greater_than_equal, greater_than, less_than_equal, less_than
+#   contains: in, not_in, all
+#   partial: like, contains
+#   geo: near
+#   geojson: within, intersects
+# ---------------------------------------------------------------------------
+
+input UserWhereInput {
+  id:        User_id_operator
+  email:     User_email_operator
+  updatedAt: User_updatedAt_operator
+  createdAt: User_createdAt_operator
+  AND:       [UserWhereInput]
+  OR:        [UserWhereInput]
+}
+
+input User_id_operator {
+  equals:     String
+  not_equals: String
+  in:         [String]
+  not_in:     [String]
+  all:        [String]
+  like:       String
+  contains:   String
+  exists:     Boolean
+}
+
+input User_email_operator {
+  equals:     String
+  not_equals: String
+  like:       String
+  contains:   String
+  in:         [String]
+  not_in:     [String]
+  all:        [String]
+  exists:     Boolean
+}
+
+input User_updatedAt_operator {
+  equals:               String
+  not_equals:           String
+  greater_than_equal:   String
+  greater_than:         String
+  less_than_equal:      String
+  less_than:            String
+  exists:               Boolean
+}
+
+input User_createdAt_operator {
+  equals:               String
+  not_equals:           String
+  greater_than_equal:   String
+  greater_than:         String
+  less_than_equal:      String
+  less_than:            String
+  exists:               Boolean
+}
+
+input PayloadPreferenceWhereInput {
+  id:        PayloadPreference_id_operator
+  key:       PayloadPreference_key_operator
+  updatedAt: PayloadPreference_updatedAt_operator
+  createdAt: PayloadPreference_createdAt_operator
+  AND:       [PayloadPreferenceWhereInput]
+  OR:        [PayloadPreferenceWhereInput]
+}
+
+input PayloadPreference_id_operator {
+  equals:     String
+  not_equals: String
+  in:         [String]
+  not_in:     [String]
+  all:        [String]
+  exists:     Boolean
+}
+
+input PayloadPreference_key_operator {
+  equals:     String
+  not_equals: String
+  like:       String
+  contains:   String
+  in:         [String]
+  not_in:     [String]
+  all:        [String]
+  exists:     Boolean
+}
+
+input PayloadPreference_updatedAt_operator {
+  equals:             String
+  not_equals:         String
+  greater_than_equal: String
+  greater_than:       String
+  less_than_equal:    String
+  less_than:          String
+  exists:             Boolean
+}
+
+input PayloadPreference_createdAt_operator {
+  equals:             String
+  not_equals:         String
+  greater_than_equal: String
+  greater_than:       String
+  less_than_equal:    String
+  less_than:          String
+  exists:             Boolean
+}
+
+# ---------------------------------------------------------------------------
+# Mutation input types (generated by buildMutationInputType.ts)
+# ---------------------------------------------------------------------------
+
+input mutationUserInput {
+  email:    String!
+  password: String!
+}
+
+input mutationUserUpdateInput {
+  email:    String
+  password: String
+}
+
+input mutationPayloadPreferenceInput {
+  key:   String
+  value: JSON
+}
+
+input mutationPayloadPreferenceUpdateInput {
+  key:   String
+  value: JSON
+}
+
+# ---------------------------------------------------------------------------
+# Example user-defined collection: Post
+# Illustrates the pattern for any collection with versioning enabled.
+# ---------------------------------------------------------------------------
+
+"""
+Example collection type. In a real Payload deployment, all fields are
+generated from the collection's field definitions.
+"""
+type Post {
+  id: String
+  title: String
+  content: JSON
+  author: User
+  status: String
+  publishedAt: String
+  updatedAt: String
+  createdAt: String
+}
+
+"""
+Version wrapper for a versioned collection document.
+Generated when versions are enabled on a collection.
+"""
+type PostVersion {
+  id: String
+  version: Post
+  createdAt: String
+  updatedAt: String
+}
+
+type versionsPost {
+  docs: [PostVersion!]!
+  hasNextPage: Boolean!
+  hasPrevPage: Boolean!
+  limit: Int!
+  nextPage: Int
+  offset: Int
+  page: Int!
+  pagingCounter: Int!
+  prevPage: Int
+  totalDocs: Int!
+  totalPages: Int!
+}
+
+# ---------------------------------------------------------------------------
+# Example user-defined global: Header
+# Illustrates the pattern for any global.
+# ---------------------------------------------------------------------------
+
+"""
+Example global type. In a real Payload deployment, fields come from the
+global's field definitions.
+"""
+type Header {
+  id: String
+  navItems: [Header_NavItem]
+  updatedAt: String
+  createdAt: String
+}
+
+type Header_NavItem {
+  label: String
+  link: String
+}
+
+# ---------------------------------------------------------------------------
+# Root Query type
+# ---------------------------------------------------------------------------
+
+"""
+Root Query.
+Built-in fields are always present; per-collection and per-global fields
+are added dynamically based on the Payload configuration.
+
+Pattern per collection (singular=Post, plural=Posts):
+  Post(id: String!, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, select: Boolean, trash: Boolean): Post
+  Posts(where: PostWhereInput, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, limit: Int, page: Int, pagination: Boolean, select: Boolean, sort: String, trash: Boolean): Posts
+  countPosts(where: PostWhereInput, draft: Boolean, locale: LocaleInputType, trash: Boolean): countPosts
+  docAccessPost(id: String!): PostDocAccess
+  mePost: PostMe                        # auth collections only
+  initializedPost: Boolean              # auth collections only
+  versionPost(id: String, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, trash: Boolean): PostVersion   # versioned only
+  versionsPosts(where: ..., limit: Int, page: Int, sort: String, ...): versionsPosts                                                       # versioned only
+
+Pattern per global (name=Header):
+  Header(draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, select: Boolean): Header
+  docAccessHeader: HeaderDocAccess
+
+Built-in queries:
+  Access: Access           — returns the full policy/permission tree for all collections and globals
+  Preference(key: String!): PayloadPreference   — returns a single user preference (requires auth)
+"""
+type Query {
+  # Built-in: access policy tree
+  Access: Access
+
+  # Built-in: user preferences (requires Authorization header)
+  Preference(key: String!): PayloadPreference
+
+  # Built-in: Users collection
+  User(id: String!, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, select: Boolean, trash: Boolean): User
+  Users(where: UserWhereInput, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, limit: Int, page: Int, pagination: Boolean, select: Boolean, sort: String, trash: Boolean): Users
+  countUsers(where: UserWhereInput, draft: Boolean, locale: LocaleInputType, trash: Boolean): countUsers
+  docAccessUser(id: String!): UserDocAccess
+  meUser: usersMe
+  initializedUser: Boolean
+
+  # Built-in: PayloadPreference collection
+  PayloadPreference(id: String!, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, select: Boolean, trash: Boolean): PayloadPreference
+  PayloadPreferences(where: PayloadPreferenceWhereInput, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, limit: Int, page: Int, pagination: Boolean, select: Boolean, sort: String, trash: Boolean): PayloadPreferences
+  countPayloadPreferences(where: PayloadPreferenceWhereInput, draft: Boolean, locale: LocaleInputType, trash: Boolean): countPayloadPreferences
+  docAccessPayloadPreference(id: String!): PayloadPreferenceDocAccess
+
+  # Example: user-defined Post collection (versioned)
+  Post(id: String!, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, select: Boolean, trash: Boolean): Post
+  Posts(where: PostWhereInput, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, limit: Int, page: Int, pagination: Boolean, select: Boolean, sort: String, trash: Boolean): Posts
+  countPosts(where: PostWhereInput, draft: Boolean, locale: LocaleInputType, trash: Boolean): countPosts
+  docAccessPost(id: String!): PostDocAccess
+  versionPost(id: String, draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, trash: Boolean): PostVersion
+  versionsPosts(where: versionsPostWhereInput, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, limit: Int, page: Int, pagination: Boolean, select: Boolean, sort: String, trash: Boolean): versionsPost
+
+  # Example: user-defined Header global
+  Header(draft: Boolean, locale: LocaleInputType, fallbackLocale: FallbackLocaleInputType, select: Boolean): Header
+  docAccessHeader: HeaderDocAccess
+}
+
+# ---------------------------------------------------------------------------
+# Root Mutation type
+# ---------------------------------------------------------------------------
+
+"""
+Root Mutation.
+Per-collection mutations follow this pattern (singular=Post):
+  createPost(data: mutationPostInput, draft: Boolean, locale: LocaleInputType): Post
+  updatePost(id: String!, data: mutationPostUpdateInput, autosave: Boolean, draft: Boolean, locale: LocaleInputType, trash: Boolean): Post
+  deletePost(id: String!, trash: Boolean): Post
+  duplicatePost(id: String!, data: mutationPostInput): Post          # unless disableDuplicate: true
+  restoreVersionPost(id: String, draft: Boolean): Post               # versioned only
+
+Auth collection mutations (singular=User):
+  loginUser(email: String!, password: String): usersLoginResult
+  logoutUser(allSessions: Boolean): String
+  refreshTokenUser: usersRefreshedUser
+  forgotPasswordUser(email: String!): Boolean!
+  resetPasswordUser(password: String, token: String): usersResetPassword
+  verifyEmailUser(token: String): Boolean
+  unlockUser(email: String!): Boolean!
+
+Global mutations (name=Header):
+  updateHeader(data: mutationHeaderInput, draft: Boolean, locale: LocaleInputType): Header
+  restoreVersionHeader(id: String, draft: Boolean): Header           # versioned globals only
+
+Preference mutations:
+  updatePreference(key: String!, value: JSON): PayloadPreference
+  deletePreference(key: String!): PayloadPreference
+"""
+type Mutation {
+  # Built-in: Users collection (auth)
+  createUser(data: mutationUserInput!, draft: Boolean, locale: LocaleInputType): User
+  updateUser(id: String!, data: mutationUserUpdateInput, autosave: Boolean, draft: Boolean, locale: LocaleInputType, trash: Boolean): User
+  deleteUser(id: String!, trash: Boolean): User
+  loginUser(email: String!, password: String): usersLoginResult
+  logoutUser(allSessions: Boolean): String
+  refreshTokenUser: usersRefreshedUser
+  forgotPasswordUser(email: String!): Boolean!
+  resetPasswordUser(password: String, token: String): usersResetPassword
+  verifyEmailUser(token: String): Boolean
+  unlockUser(email: String!): Boolean!
+
+  # Built-in: PayloadPreference collection
+  createPayloadPreference(data: mutationPayloadPreferenceInput, draft: Boolean): PayloadPreference
+  updatePayloadPreference(id: String!, data: mutationPayloadPreferenceUpdateInput, autosave: Boolean, draft: Boolean, trash: Boolean): PayloadPreference
+  deletePayloadPreference(id: String!, trash: Boolean): PayloadPreference
+
+  # Built-in: Preference shorthand (used by admin panel)
+  updatePreference(key: String!, value: JSON): PayloadPreference
+  deletePreference(key: String!): PayloadPreference
+
+  # Example: user-defined Post collection (versioned)
+  createPost(data: mutationPostInput, draft: Boolean, locale: LocaleInputType): Post
+  updatePost(id: String!, data: mutationPostUpdateInput, autosave: Boolean, draft: Boolean, locale: LocaleInputType, trash: Boolean): Post
+  deletePost(id: String!, trash: Boolean): Post
+  duplicatePost(id: String!, data: mutationPostInput): Post
+  restoreVersionPost(id: String, draft: Boolean): Post
+
+  # Example: user-defined Header global
+  updateHeader(data: mutationHeaderInput, draft: Boolean, locale: LocaleInputType): Header
+}
+
+# ---------------------------------------------------------------------------
+# Placeholder input types for example Post and Header
+# (real types generated from field definitions at runtime)
+# ---------------------------------------------------------------------------
+
+input mutationPostInput {
+  title:       String
+  content:     JSON
+  status:      String
+  publishedAt: String
+}
+
+input mutationPostUpdateInput {
+  title:       String
+  content:     JSON
+  status:      String
+  publishedAt: String
+}
+
+input mutationHeaderInput {
+  navItems: [mutationHeader_NavItemInput]
+}
+
+input mutationHeader_NavItemInput {
+  label: String
+  link:  String
+}
+
+input PostWhereInput {
+  id:        Post_id_operator
+  title:     Post_title_operator
+  status:    Post_status_operator
+  updatedAt: Post_updatedAt_operator
+  createdAt: Post_createdAt_operator
+  AND:       [PostWhereInput]
+  OR:        [PostWhereInput]
+}
+
+input Post_id_operator      { equals: String, not_equals: String, in: [String], not_in: [String], all: [String], exists: Boolean }
+input Post_title_operator   { equals: String, not_equals: String, like: String, contains: String, in: [String], not_in: [String], all: [String], exists: Boolean }
+input Post_status_operator  { equals: String, not_equals: String, in: [String], not_in: [String], all: [String], exists: Boolean }
+input Post_updatedAt_operator { equals: String, not_equals: String, greater_than_equal: String, greater_than: String, less_than_equal: String, less_than: String, exists: Boolean }
+input Post_createdAt_operator { equals: String, not_equals: String, greater_than_equal: String, greater_than: String, less_than_equal: String, less_than: String, exists: Boolean }
+
+input versionsPostWhereInput {
+  id:        Post_id_operator
+  updatedAt: Post_updatedAt_operator
+  createdAt: Post_createdAt_operator
+  AND:       [versionsPostWhereInput]
+  OR:        [versionsPostWhereInput]
+}
+
+# ---------------------------------------------------------------------------
+# Placeholder count and docAccess types for PayloadPreferences and Post
+# ---------------------------------------------------------------------------
+
+type countUsers                { totalDocs: Int }
+type countPayloadPreferences   { totalDocs: Int }
+
+type PayloadPreferenceDocAccess {
+  fields: PayloadPreferencesFields
+  create: PayloadPreferencesCreateAccess
+  read:   PayloadPreferencesReadAccess
+  update: PayloadPreferencesUpdateAccess
+  delete: PayloadPreferencesDeleteAccess
+}
+
+type PostDocAccess {
+  fields: PostDocAccessFields
+  create: PostDocAccess_Create
+  read:   PostDocAccess_Read
+  update: PostDocAccess_Update
+  delete: PostDocAccess_Delete
+  readVersions: PostDocAccess_ReadVersions
+}
+
+type PostDocAccessFields { title: PostDocAccessFields_title, content: PostDocAccessFields_content }
+type PostDocAccessFields_title   { create: PostDocAccessFields_title_Create, read: PostDocAccessFields_title_Read, update: PostDocAccessFields_title_Update, delete: PostDocAccessFields_title_Delete }
+type PostDocAccessFields_content { create: PostDocAccessFields_content_Create, read: PostDocAccessFields_content_Read, update: PostDocAccessFields_content_Update, delete: PostDocAccessFields_content_Delete }
+type PostDocAccessFields_title_Create   { permission: Boolean! }
+type PostDocAccessFields_title_Read     { permission: Boolean! }
+type PostDocAccessFields_title_Update   { permission: Boolean! }
+type PostDocAccessFields_title_Delete   { permission: Boolean! }
+type PostDocAccessFields_content_Create { permission: Boolean! }
+type PostDocAccessFields_content_Read   { permission: Boolean! }
+type PostDocAccessFields_content_Update { permission: Boolean! }
+type PostDocAccessFields_content_Delete { permission: Boolean! }
+type PostDocAccess_Create        { permission: Boolean!, where: JSON }
+type PostDocAccess_Read          { permission: Boolean!, where: JSON }
+type PostDocAccess_Update        { permission: Boolean!, where: JSON }
+type PostDocAccess_Delete        { permission: Boolean!, where: JSON }
+type PostDocAccess_ReadVersions  { permission: Boolean!, where: JSON }
+
+type HeaderDocAccess {
+  fields: HeaderDocAccessFields
+  read:   HeaderDocAccess_Read
+  update: HeaderDocAccess_Update
+}
+type HeaderDocAccessFields { navItems: HeaderDocAccessFields_navItems }
+type HeaderDocAccessFields_navItems { create: HeaderDocAccessFields_navItems_Create, read: HeaderDocAccessFields_navItems_Read, update: HeaderDocAccessFields_navItems_Update, delete: HeaderDocAccessFields_navItems_Delete }
+type HeaderDocAccessFields_navItems_Create { permission: Boolean! }
+type HeaderDocAccessFields_navItems_Read   { permission: Boolean! }
+type HeaderDocAccessFields_navItems_Update { permission: Boolean! }
+type HeaderDocAccessFields_navItems_Delete { permission: Boolean! }
+type HeaderDocAccess_Read   { permission: Boolean!, where: JSON }
+type HeaderDocAccess_Update { permission: Boolean!, where: JSON }
