@@ -3,7 +3,7 @@ name: Payload CMS
 description: Open-source headless CMS and fullstack Next.js framework providing automatic
   REST and GraphQL APIs for managing collections, globals, media, users, and custom
   fields in self-hosted or cloud deployments.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/payloadcms/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
