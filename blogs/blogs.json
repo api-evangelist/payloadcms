@@ -1,7 +1,7 @@
 {
   "aid": "payloadcms",
   "url": "https://payloadcms.com/posts/blog",
-  "fetched": "2026-06-27T13:00:44Z",
+  "fetched": "2026-07-11T11:50:51Z",
   "posts": [
     {
       "title": "An early look at 4.0: Admin UI Redesign, TanStack, MCP, and More",
@@ -481,12 +481,13 @@
   "repo": "payloadcms",
   "feeds": [
     {
-      "source": "https://payloadcms.com/posts/blog",
-      "feed_url": "",
+      "source": "https://www.linkedin.com/company/payload-cms",
+      "feed_url": "https://www.linkedin.com/company/payload-cms",
+      "title": "",
       "saved": 0,
-      "method": "agent-scrape"
+      "method": "none"
     }
   ],
   "post_count": 0,
-  "agent_pulled": "2026-06-27"
+  "agent_pulled": "2026-07-04"
 }
