@@ -26,6 +26,15 @@ tags:
 - REST API
 - GraphQL
 - Next.js
+- Open-Source
+- Self-Hosted
+- TypeScript
+tags_raw:
+- Headless CMS
+- Content Management
+- REST API
+- GraphQL
+- Next.js
 - Open Source
 - Self-Hosted
 - TypeScript
@@ -38,6 +47,12 @@ apis:
   humanURL: https://payloadcms.com/docs/rest-api/overview
   baseURL: https://{your-domain}/api
   tags:
+  - REST
+  - Collection
+  - Globals
+  - Authentication
+  - Media
+  tags_raw:
   - REST
   - Collections
   - Globals
@@ -55,6 +70,11 @@ apis:
   baseURL: https://{your-domain}/api/graphql
   tags:
   - GraphQL
+  - Collection
+  - Globals
+  - Authentication
+  tags_raw:
+  - GraphQL
   - Collections
   - Globals
   - Authentication
@@ -71,6 +91,11 @@ apis:
   humanURL: https://payloadcms.com/docs/local-api/overview
   baseURL: https://{your-domain}
   tags:
+  - Node.js
+  - Server-Side
+  - Collection
+  - Globals
+  tags_raw:
   - Node.js
   - Server-Side
   - Collections
