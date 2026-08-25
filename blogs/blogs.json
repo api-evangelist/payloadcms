@@ -1,7 +1,7 @@
 {
   "aid": "payloadcms",
   "url": "https://payloadcms.com/posts/blog",
-  "fetched": "2026-08-15T12:11:08Z",
+  "fetched": "2026-08-22T20:20:02Z",
   "posts": [
     {
       "title": "An early look at 4.0: Admin UI Redesign, TanStack, MCP, and More",
@@ -485,8 +485,7 @@
       "feed_url": "https://www.linkedin.com/company/payload-cms",
       "title": "",
       "saved": 0,
-      "method": "none",
-      "error": "parse_failed"
+      "method": "none"
     }
   ],
   "post_count": 0,
