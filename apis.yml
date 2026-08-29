@@ -3,6 +3,17 @@ name: Payload CMS
 description: Open-source headless CMS and fullstack Next.js framework providing automatic
   REST and GraphQL APIs for managing collections, globals, media, users, and custom
   fields in self-hosted or cloud deployments.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: unknown
