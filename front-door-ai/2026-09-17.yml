@@ -1,0 +1,27 @@
+# Front Door AI Index — payloadcms — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: payloadcms
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: payloadcms.com
+  final_host: payloadcms.com
+  ownership: own
+  owner: payloadcms
+  shares_host_with:
+  - payload
+  inherited_from: null
+  verdict: scored
+  score: 3
+  host_score: 3
+  density: 5.17
+  words: 580
+  tiers:
+    agentic: 2
+    core: 1
+    model: 0
+  ambiguous: 0
+  top_terms:
+    RAG: 2
+    AI: 1
