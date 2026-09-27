@@ -1,0 +1,149 @@
+openapi: 3.2.0
+info:
+  title: Payload CMS REST Authentication API
+  description: Payload is a TypeScript-first headless CMS and application framework that auto-generates REST and GraphQL APIs from collection schemas. The REST API exposes collections at /api/{collection-slug}, globals at /api/globals/{global-slug}, auth operations at /api/{user-collection}/login etc., and user preferences at /api/payload-preferences/{key}. Authentication uses JWT tokens issued by the login endpoint.
+  version: '3.0'
+  contact:
+    name: Payload
+    url: https://payloadcms.com/docs
+servers:
+- url: https://example.com
+  description: Self-hosted Payload instance (replace with your deployment).
+security:
+- bearerAuth: []
+tags:
+- name: Authentication
+paths:
+  /api/{userCollection}/login:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Auth-enabled collection slug (e.g. users).
+    post:
+      tags:
+      - Authentication
+      summary: Login and receive a JWT token
+      operationId: login
+      responses:
+        '200':
+          description: JWT token and user object.
+  /api/{userCollection}/logout:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - Authentication
+      summary: Logout current session
+      operationId: logout
+      responses:
+        '200':
+          description: Logged out.
+  /api/{userCollection}/me:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Authentication
+      summary: Get current authenticated user
+      operationId: me
+      responses:
+        '200':
+          description: Current user.
+  /api/{userCollection}/refresh-token:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - Authentication
+      summary: Refresh the JWT token
+      operationId: refreshToken
+      responses:
+        '200':
+          description: New JWT issued.
+  /api/{userCollection}/verify/{token}:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: token
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - Authentication
+      summary: Verify a newly-registered user via email token
+      operationId: verifyUser
+      responses:
+        '200':
+          description: User verified.
+  /api/{userCollection}/forgot-password:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - Authentication
+      summary: Initiate forgot-password flow
+      operationId: forgotPassword
+      responses:
+        '200':
+          description: Email sent.
+  /api/{userCollection}/reset-password:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - Authentication
+      summary: Reset password using a token
+      operationId: resetPassword
+      responses:
+        '200':
+          description: Password reset.
+  /api/{userCollection}/unlock:
+    parameters:
+    - name: userCollection
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      tags:
+      - Authentication
+      summary: Unlock a locked user account
+      operationId: unlockUser
+      responses:
+        '200':
+          description: User unlocked.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT issued by the login endpoint. Send as `Authorization: JWT <token>` or via cookie.'

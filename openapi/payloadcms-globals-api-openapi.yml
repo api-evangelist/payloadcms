@@ -1,0 +1,47 @@
+openapi: 3.2.0
+info:
+  title: Payload CMS REST Globals API
+  description: Payload is a TypeScript-first headless CMS and application framework that auto-generates REST and GraphQL APIs from collection schemas. The REST API exposes collections at /api/{collection-slug}, globals at /api/globals/{global-slug}, auth operations at /api/{user-collection}/login etc., and user preferences at /api/payload-preferences/{key}. Authentication uses JWT tokens issued by the login endpoint.
+  version: '3.0'
+  contact:
+    name: Payload
+    url: https://payloadcms.com/docs
+servers:
+- url: https://example.com
+  description: Self-hosted Payload instance (replace with your deployment).
+security:
+- bearerAuth: []
+tags:
+- name: Globals
+paths:
+  /api/globals/{global}:
+    parameters:
+    - name: global
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Global slug.
+    get:
+      tags:
+      - Globals
+      summary: Get a global
+      operationId: getGlobal
+      responses:
+        '200':
+          description: Global document.
+    post:
+      tags:
+      - Globals
+      summary: Update a global
+      operationId: updateGlobal
+      responses:
+        '200':
+          description: Global updated.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT issued by the login endpoint. Send as `Authorization: JWT <token>` or via cookie.'

@@ -1,0 +1,114 @@
+openapi: 3.2.0
+info:
+  title: Payload CMS REST Collections API
+  description: Payload is a TypeScript-first headless CMS and application framework that auto-generates REST and GraphQL APIs from collection schemas. The REST API exposes collections at /api/{collection-slug}, globals at /api/globals/{global-slug}, auth operations at /api/{user-collection}/login etc., and user preferences at /api/payload-preferences/{key}. Authentication uses JWT tokens issued by the login endpoint.
+  version: '3.0'
+  contact:
+    name: Payload
+    url: https://payloadcms.com/docs
+servers:
+- url: https://example.com
+  description: Self-hosted Payload instance (replace with your deployment).
+security:
+- bearerAuth: []
+tags:
+- name: Collections
+paths:
+  /api/{collection}:
+    parameters:
+    - name: collection
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Collection slug.
+    get:
+      tags:
+      - Collections
+      summary: Find documents in collection
+      operationId: findCollection
+      responses:
+        '200':
+          description: A paginated list of documents.
+    post:
+      tags:
+      - Collections
+      summary: Create a document
+      operationId: createDocument
+      responses:
+        '201':
+          description: Document created.
+    patch:
+      tags:
+      - Collections
+      summary: Bulk update documents matching a query
+      operationId: bulkUpdateDocuments
+      responses:
+        '200':
+          description: Documents updated.
+    delete:
+      tags:
+      - Collections
+      summary: Bulk delete documents matching a query
+      operationId: bulkDeleteDocuments
+      responses:
+        '200':
+          description: Documents deleted.
+  /api/{collection}/{id}:
+    parameters:
+    - name: collection
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Collections
+      summary: Find document by id
+      operationId: findDocumentById
+      responses:
+        '200':
+          description: Document details.
+    patch:
+      tags:
+      - Collections
+      summary: Update document by id
+      operationId: updateDocumentById
+      responses:
+        '200':
+          description: Document updated.
+    delete:
+      tags:
+      - Collections
+      summary: Delete document by id
+      operationId: deleteDocumentById
+      responses:
+        '200':
+          description: Document deleted.
+  /api/{collection}/count:
+    parameters:
+    - name: collection
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Collections
+      summary: Count documents matching a query
+      operationId: countDocuments
+      responses:
+        '200':
+          description: Count of matching documents.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT issued by the login endpoint. Send as `Authorization: JWT <token>` or via cookie.'

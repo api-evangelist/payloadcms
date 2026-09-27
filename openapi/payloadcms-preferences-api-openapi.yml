@@ -1,0 +1,54 @@
+openapi: 3.2.0
+info:
+  title: Payload CMS REST Preferences API
+  description: Payload is a TypeScript-first headless CMS and application framework that auto-generates REST and GraphQL APIs from collection schemas. The REST API exposes collections at /api/{collection-slug}, globals at /api/globals/{global-slug}, auth operations at /api/{user-collection}/login etc., and user preferences at /api/payload-preferences/{key}. Authentication uses JWT tokens issued by the login endpoint.
+  version: '3.0'
+  contact:
+    name: Payload
+    url: https://payloadcms.com/docs
+servers:
+- url: https://example.com
+  description: Self-hosted Payload instance (replace with your deployment).
+security:
+- bearerAuth: []
+tags:
+- name: Preferences
+paths:
+  /api/payload-preferences/{key}:
+    parameters:
+    - name: key
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Preferences
+      summary: Get a user preference
+      operationId: getPreference
+      responses:
+        '200':
+          description: Preference value.
+    post:
+      tags:
+      - Preferences
+      summary: Create or update a user preference
+      operationId: upsertPreference
+      responses:
+        '200':
+          description: Preference saved.
+    delete:
+      tags:
+      - Preferences
+      summary: Delete a user preference
+      operationId: deletePreference
+      responses:
+        '200':
+          description: Preference deleted.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT issued by the login endpoint. Send as `Authorization: JWT <token>` or via cookie.'

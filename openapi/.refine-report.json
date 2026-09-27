@@ -1,0 +1,27 @@
+{
+  "provider": "payloadcms",
+  "sources": [
+    "payload-authentication-api-openapi.yml",
+    "payload-collections-api-openapi.yml",
+    "payload-globals-api-openapi.yml",
+    "payload-preferences-api-openapi.yml"
+  ],
+  "outputs": [
+    "payloadcms-authentication-api-openapi.yml",
+    "payloadcms-collections-api-openapi.yml",
+    "payloadcms-globals-api-openapi.yml",
+    "payloadcms-preferences-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/payload-authentication-api-openapi.yml",
+    "archived openapi/payload-collections-api-openapi.yml",
+    "archived openapi/payload-globals-api-openapi.yml",
+    "archived openapi/payload-preferences-api-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "apis.yml register: written (+4 apis, 8 total)"
+  ],
+  "skipped": []
+}
