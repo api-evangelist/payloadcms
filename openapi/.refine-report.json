@@ -1,10 +1,10 @@
 {
   "provider": "payloadcms",
   "sources": [
-    "payload-authentication-api-openapi.yml",
-    "payload-collections-api-openapi.yml",
-    "payload-globals-api-openapi.yml",
-    "payload-preferences-api-openapi.yml"
+    "_original/payload-authentication-api-openapi.yml",
+    "_original/payload-collections-api-openapi.yml",
+    "_original/payload-globals-api-openapi.yml",
+    "_original/payload-preferences-api-openapi.yml"
   ],
   "outputs": [
     "payloadcms-authentication-api-openapi.yml",
@@ -12,16 +12,17 @@
     "payloadcms-globals-api-openapi.yml",
     "payloadcms-preferences-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/payload-authentication-api-openapi.yml",
-    "archived openapi/payload-collections-api-openapi.yml",
-    "archived openapi/payload-globals-api-openapi.yml",
-    "archived openapi/payload-preferences-api-openapi.yml"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
-    "apis.yml register: written (+4 apis, 8 total)"
+    "sourced from openapi/_original/ (4 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "payloadcms-authentication-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "payloadcms-collections-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "payloadcms-globals-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "payloadcms-preferences-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
