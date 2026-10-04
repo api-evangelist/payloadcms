@@ -173,6 +173,8 @@ apis:
   humanURL: https://payloadcms.com/docs/rest-api/overview
   baseURL: https://{your-domain}/api
   tags:
+  - Collection
+  tags_raw:
   - Collections
   properties:
   - type: OpenAPI
