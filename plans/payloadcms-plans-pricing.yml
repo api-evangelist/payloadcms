@@ -68,3 +68,40 @@ overage_pricing:
   - item: File storage
     price: 0.02
     unit: per GB
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units:
+  - period
+  plans:
+  - name: Free (Self-Hosted)
+    access: other
+    model: free
+    model_how: derived
+    units:
+    - period
+    periods: []
+  - name: Standard Cloud
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - period
+    periods: []
+  - name: Pro Cloud
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - period
+    periods: []
+  - name: Enterprise Cloud
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - period
+    periods: []
