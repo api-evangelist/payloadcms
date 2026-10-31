@@ -1,4 +1,4 @@
-# Payload CMS (payloadcms)
+# Payload CMS
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,96 +66,116 @@
 
 Open-source headless CMS and fullstack Next.js framework providing automatic REST and GraphQL APIs for managing collections, globals, media, users, and custom fields in self-hosted or cloud deployments.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/payloadcms/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/payloadcms/refs/heads/main/apis.yml)
+**Areas:** Headless CMS · Content Management · REST API · GraphQL · Next.js · Open Source · Self-Hosted · TypeScript · Application Framework · CMS · Content · Headless
 
-## Tags
+## Payload CMS on APIs.io
 
-- Headless CMS
-- Content Management
-- REST API
-- GraphQL
-- Next.js
-- Open Source
-- Self-Hosted
-- TypeScript
+Everything profiled for Payload CMS is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/payloadcms/](https://apis.io/providers/payloadcms/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (8)
 
-- **Created:** 2026-06-13
-- **Modified:** 2026-06-13
+- [Payload CMS REST API](https://apis.io/apis/payloadcms/rest-api/) — Auto-generated RESTful API for managing collections, globals, media uploads, users, and preferences. Mounted at /api/{collection-slug} with full CRUD…
+- [Payload CMS GraphQL API](https://apis.io/apis/payloadcms/graphql-api/) — Fully featured GraphQL API exposed at /api/graphql with auto-generated types for all collections and globals. Includes a GraphQL Playground at…
+- [Payload CMS Local API](https://apis.io/apis/payloadcms/local-api/) — Server-side Node.js API for direct database interaction without HTTP overhead. Supports all collection and global operations including authentication, ideal…
+- [Payload](https://apis.io/apis/payloadcms/payload/) — Payload is a TypeScript-first headless CMS and application framework that automatically generates REST, GraphQL, and Local APIs from collection schemas,…
+- [Payload CMS Authentication API](https://apis.io/apis/payloadcms/payloadcms-authentication-api/) — The Authentication API from Payload CMS — 8 operation(s) for authentication.
+- [Payload CMS Collections API](https://apis.io/apis/payloadcms/payloadcms-collections-api/) — The Collections API from Payload CMS — 3 operation(s) for collections.
+- [Payload CMS Globals API](https://apis.io/apis/payloadcms/payloadcms-globals-api/) — The Globals API from Payload CMS — 1 operation(s) for globals.
+- [Payload CMS Preferences API](https://apis.io/apis/payloadcms/payloadcms-preferences-api/) — The Preferences API from Payload CMS — 1 operation(s) for preferences.
 
-## APIs
+### Published properties
 
-### Payload CMS REST API
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-Auto-generated RESTful API for managing collections, globals, media uploads, users, and preferences. Mounted at /api/{collection-slug} with full CRUD operations plus authentication endpoints.
+#### GraphQL (2)
 
-- **Human URL:** [https://payloadcms.com/docs/rest-api/overview](https://payloadcms.com/docs/rest-api/overview)
-- **Base URL:** `https://{your-domain}/api`
+GraphQL schemas.
 
-#### Tags
+- [Payload GraphQL API](https://apis.io/graphqls/payloadcms/payload-graphql/)
+- [Payload CMS GraphQL API](https://apis.io/graphqls/payloadcms/payloadcms-graphql/)
 
-- REST
-- Collections
-- Globals
-- Authentication
-- Media
+#### Security (1)
 
-#### Properties
+Authentication, trust centre, and vulnerability disclosure.
 
-- [Documentation](https://payloadcms.com/docs/rest-api/overview)
+- [Payloadcms Domain Security](https://apis.io/security/payloadcms/payloadcms-domain-security/)
 
-### Payload CMS GraphQL API
+#### Plans and pricing (1)
 
-Fully featured GraphQL API exposed at /api/graphql with auto-generated types for all collections and globals. Includes a GraphQL Playground at /api/graphql-playground and supports complexity limiting to prevent abuse.
+Published plans, tiers and prices.
 
-- **Human URL:** [https://payloadcms.com/docs/graphql/overview](https://payloadcms.com/docs/graphql/overview)
-- **Base URL:** `https://{your-domain}/api/graphql`
+- [Payloadcms Plans Pricing](https://apis.io/plans/payloadcms/payloadcms-plans-pricing/)
 
-#### Tags
+#### Rate limits (1)
 
-- GraphQL
-- Collections
-- Globals
-- Authentication
+Published request limits.
 
-#### Properties
+- [Payloadcms Rate Limits](https://apis.io/rate-limits/payloadcms/payloadcms-rate-limits/)
 
-- [Documentation](https://payloadcms.com/docs/graphql/overview)
-- [Graph Q L](graphql/payloadcms-graphql.md)
+#### FinOps (1)
 
-### Payload CMS Local API
+What the API costs to run, by operation.
 
-Server-side Node.js API for direct database interaction without HTTP overhead. Supports all collection and global operations including authentication, ideal for React Server Components and server-side rendering.
+- [Payloadcms Finops](https://apis.io/finops/payloadcms/payloadcms-finops/)
 
-- **Human URL:** [https://payloadcms.com/docs/local-api/overview](https://payloadcms.com/docs/local-api/overview)
-- **Base URL:** `https://{your-domain}`
+## Where to find this API
 
-#### Tags
-
-- Node.js
-- Server-Side
-- Collections
-- Globals
-
-#### Properties
-
-- [Documentation](https://payloadcms.com/docs/local-api/overview)
-
-## Common Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://payloadcms.com)
 - [Documentation](https://payloadcms.com/docs/getting-started/what-is-payload)
-- [Git Hub Org](https://github.com/payloadcms)
-- [LinkedIn](https://www.linkedin.com/company/payload-cms)
-- [Blog](https://payloadcms.com/posts/blog)
 - [Pricing](https://payloadcms.com/cloud)
-- [X (Twitter)](https://x.com/payloadcms)
-- [Plans](plans/payloadcms-plans-pricing.yml)
-- [Rate Limits](rate-limits/payloadcms-rate-limits.yml)
-- [Fin Ops](finops/payloadcms-finops.yml)
+- [Blog](https://payloadcms.com/posts/blog)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 29.9** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.4 |
+| Contract quality | 46.4 |
+| Contract governance | 0.0 |
+| Operational transparency | 13.2 |
+| Developer ergonomics | 23.8 |
+| Access clarity | 18.4 |
+
+**Agent readiness 16.1** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 11.8** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/payloadcms/](https://apis.io/providers/payloadcms/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Payload CMS: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/payloadcms/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
